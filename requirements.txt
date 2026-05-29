@@ -1,0 +1,4 @@
+numpy
+pandas
+pyyaml
+tables  # optional: only needed for hdf5 output format

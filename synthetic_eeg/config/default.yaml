@@ -1,0 +1,66 @@
+global:
+  seed: 42
+  duration: 10.0   # seconds — auto-extended if epoch count requires more data
+  fs: 256          # Hz
+
+channels:
+  - name: "Fp1"
+    signal:
+      components:
+        - {freq: 10.0, amplitude: 20.0, phase: 0.0}                    # alpha — full duration
+        - {freq: 2.0,  amplitude: 50.0, phase: 0.0, start: 0.0, stop: 5.0}  # delta — first 5s only
+        - {freq: 6.2,  amplitude: 35,   phase: 0.2, start: 0.0, stop: 8.0}
+    noise:
+      white:  {enabled: true,  amplitude: 2.0}
+      pink:   {enabled: true,  amplitude: 5.0}
+      drift:  {enabled: true,  amplitude: 10.0, freq: 0.5}
+    artifacts:
+      eye_blink:    {enabled: true,  rate: 0.2,  amplitude: 100.0}
+      heartrate:    {enabled: true,  bpm: 74,    amplitude: 5.0}
+      muscle_burst: {enabled: false, rate: 0.05, amplitude: 30.0}
+      dead_channel: {enabled: false}
+      bad_channel:  {enabled: false, amplitude_multiplier: 5.0}
+
+  - name: "Fp2"
+    signal:
+      components:
+        - {freq: 10.0, amplitude: 18.0, phase: 0.3, start: 2.0, stop: 8.0}  # alpha — middle 6s only
+        - {freq: 20.0, amplitude: 8.0,  phase: 0.0}                         # beta — full duration
+    noise:
+      white:  {enabled: true,  amplitude: 3.0}
+      pink:   {enabled: false, amplitude: 1.0}
+      drift:  {enabled: false, amplitude: 10.0, freq: 0.1}
+    artifacts:
+      eye_blink:    {enabled: true,  rate: 0.2,  amplitude: 80.0}
+      heartrate:    {enabled: true, bpm: 81,    amplitude: 4.9}
+      muscle_burst: {enabled: true,  rate: 0.08, amplitude: 29.0}
+      dead_channel: {enabled: false}
+      bad_channel:  {enabled: false, amplitude_multiplier: 5.0}
+
+  - name: "Fp3"
+    signal:
+      components:
+        - {freq: 10.0, amplitude: 18.0, phase: 0.3}  # alpha — middle 6s only
+    noise:
+      white:  {enabled: false,  amplitude: 3.0}
+      pink:   {enabled: false, amplitude: 1.0}
+      drift:  {enabled: false, amplitude: 10.0, freq: 0.1}
+    artifacts:
+      eye_blink:    {enabled: false,  rate: 0.2,  amplitude: 80.0}
+      heartrate:    {enabled: true, bpm: 90,    amplitude: 5}
+      muscle_burst: {enabled: false,  rate: 0.08, amplitude: 29.0}
+      dead_channel: {enabled: false}
+      bad_channel:  {enabled: false, amplitude_multiplier: 5.0}
+
+epochs:
+  enabled: true
+  length: 1.0      # seconds per trial
+  overlap: 0.0     # seconds of overlap between consecutive trials
+  shuffle: true    # shuffle label assignment across epochs
+  labels:
+    - {class: 0, count: 50}
+    - {class: 1, count: 50}
+
+output:
+  format: csv      # csv or hdf5 (hdf5 requires tables package)
+  path: "./output/synthetic_eeg.csv"
